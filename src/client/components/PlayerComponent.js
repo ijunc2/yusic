@@ -5,7 +5,7 @@ const PlayerComponent = ({...state}) => {
     const opts = {
         height: '100%',
         width: '100%',
-        playerVars: { // https://developers.google.com/youtube/player_parameters
+        playerVars: {
             autoplay: 1
         }
     };
