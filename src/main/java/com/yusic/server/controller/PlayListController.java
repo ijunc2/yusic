@@ -15,37 +15,22 @@ import java.util.*;
 public class PlayListController {
 
     @GetMapping("/search/list")
-    public Youtube getList(
+    public Youtube getChannel(
             String p){
-        log.info("::::::::p {}", p);
         return new Youtube.YtBuilder()
-                .setScheme("/youtube/v3/search")
+                .setScheme("/youtube/v3/playlistItems")
                 .setHttpProtocol(ProtocoleTypes.GET)
-                // 완료된 동영상만, 방송중인것은 제외
-                .setParameter("eventType", "completed")
-                .setParameter("pageToken", p == null ? "" : p)
-                // 검색어
-                .setParameter("q", "bts, kpop")
-                .setParameter("videoDuration", "short")
-                // 라이센스 (현재 유튜브 라이센스)
-//                .setParameter("videoLicense", "youtube")
-                // 어디서든 재생가능한지.
-                .setParameter("videoEmbeddable", "true")
-                // 비디오 타입만
-                .setParameter("type", "video")
-                // 영상 화질
-                .setParameter("videoDefinition", "high")
-//                .setParameter("videoType", "movie")
+                .setSnippet("snippet")
+                .setParameter("playlistId", "PLvxl7qPWdH7ZpMgAbszncGPEGeEna9TTp")
+                .setParameter("pageToken", p)
                 .exceptional(e -> "error !!!!\\n")
                 .build((Map m) -> {
-                    System.out.println(m);
                     List<Map> l = (List)m.get("items");
                     List tmp = new ArrayList();
                     l.forEach(r -> {
-                        System.out.println(r);
                         Map row = new HashMap();
                         Map snippet = (Map)r.get("snippet");
-                        row.put("videoId", ((Map)r.get("id")).get("videoId"));
+                        row.put("videoId", ((Map)snippet.get("resourceId")).get("videoId"));
                         row.put("title", snippet.get("title"));
                         row.put("description", snippet.get("description") == null ? "" : snippet.get("description"));
 //                        row.put("thumbnails", ((Map)((Map)r.get("thumbnails")).get("high")).get("url"));
@@ -56,7 +41,6 @@ public class PlayListController {
                     rtn.put("result", "y");
                     rtn.put("list", tmp);
                     rtn.put("nextPageToken", nextPage == null ? "" : nextPage);
-
                     return new Gson().toJson(rtn);
                 });
     }

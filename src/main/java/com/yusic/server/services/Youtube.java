@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.async.DeferredResult;
 
+import java.security.acl.LastOwnerException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -49,13 +50,11 @@ public class Youtube extends DeferredResult{
                 PARAM.append("&" + k).append("=" + v);
             });
 
-
             String result = connection(PARAM);
 
             return ac.execute(new Gson().fromJson(result, Map.class));
         }).thenAccept(s -> this.setResult(s))
         .exceptionally(e -> {
-            log.error(e.getCause().toString());
             this.setErrorResult(this.options.getActionCunsumerError().error(e));
             return null;
         });
@@ -115,18 +114,21 @@ public class Youtube extends DeferredResult{
             return this.ae;
         }
 
-        public YtBuilder setParameter(String key, String value){
+        public YtBuilder setParameter(String key, Object value){
             if(key == null || "".equals(key) || "undefined".equals(value) ||
                     value == null || "".equals(value) ){
                 return this;
             }
             if(param == null) param = new HashMap();
-            param.put(key, value);
+            if(value instanceof Boolean)
+                param.put(key, (Boolean)value);
+            else param.put(key, String.valueOf(value));
 
             return this;
         }
 
         protected Map getAllParameter(){
+            if(this.param == null ) return new HashMap();
             return this.param;
         }
 
