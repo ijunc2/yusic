@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import TestRdc from './TestRdc';
+import YoutubeRdx from './YoutubeRdx';
 
 const reducers = combineReducers({
-    TestRdc
+    YoutubeRdx
 });
 
 export default reducers;

@@ -12,8 +12,15 @@ const PlayerComponent = ({...state}) => {
     return (
         <div>
             <YouTube
-                videoId="UfwwDXbNnmU"
+                videoId={state.videoId}
                 opts={opts}
+                // onPause={state.getList}
+                onReady={state.getList}
+                onEnd={e => {
+                    if(e.data === 0) {
+                        state.nextTo();
+                    }
+                }}
             />
         </div>
     );
