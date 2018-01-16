@@ -37,6 +37,9 @@ dependencies {
 //	compile group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.1.1'
 //	compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.6'
 
+	// websocket
+	compile("org.springframework.boot:spring-boot-starter-websocket")
+
 	//  jwt
 	compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.6.0'
 
